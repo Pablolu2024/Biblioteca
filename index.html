@@ -26,6 +26,19 @@
   <div class="container my-4">
     <h1 class="text-center mb-4">📚 Catálogo de Libros</h1>
 
+    <!-- Buscador -->
+    <div class="row mb-4">
+      <div class="col-md-4">
+        <select id="filtroTipo" class="form-select">
+          <option value="titulo">🔤 Buscar por título</option>
+          <option value="autor">🧑 Buscar por autor</option>
+        </select>
+      </div>
+      <div class="col-md-8">
+        <input type="text" id="busqueda" class="form-control" placeholder="Escribe para buscar...">
+      </div>
+    </div>
+
     <!-- Carrusel de libros -->
     <div id="carruselLibros" class="carousel slide mb-5" data-bs-ride="carousel">
       <div class="carousel-inner" id="carouselContent"></div>
@@ -44,42 +57,66 @@
   <script>
     const API_URL = "https://script.google.com/macros/s/AKfycbxqVHBPe1GalyVAu06NvqaF9anDugcFQL3iTnH8xcCJch_khnhEiL8u1nBRJtbKarc37w/exec";
 
+    let todosLosLibros = [];
+
+    const catalogo = document.getElementById("catalogoLibros");
+    const carousel = document.getElementById("carouselContent");
+    const filtro = document.getElementById("filtroTipo");
+    const input = document.getElementById("busqueda");
+
     fetch(API_URL)
       .then(res => res.json())
       .then(libros => {
-        const catalogo = document.getElementById("catalogoLibros");
-        const carousel = document.getElementById("carouselContent");
-
-        libros.forEach((libro, i) => {
-          const card = `
-            <div class="col-md-4 mb-4">
-              <div class="card book-card shadow">
-                <img src="${libro.imagen}" class="card-img-top" alt="Portada ${libro.titulo}">
-                <div class="card-body">
-                  <h5 class="card-title">${libro.titulo}</h5>
-                  <p class="card-text">Autor: ${libro.autor}</p>
-                  <a href="${libro.enlace}" target="_blank" class="btn btn-primary">📖 Ver libro</a>
-                </div>
-              </div>
-            </div>
-          `;
-          catalogo.innerHTML += card;
-
-          const item = `
-            <div class="carousel-item ${i === 0 ? "active" : ""}">
-              <img src="${libro.imagen}" class="d-block w-100" alt="${libro.titulo}">
-              <div class="carousel-caption d-none d-md-block bg-dark bg-opacity-50 rounded p-2">
-                <h5>${libro.titulo}</h5>
-                <p>${libro.autor}</p>
-              </div>
-            </div>
-          `;
-          carousel.innerHTML += item;
-        });
+        todosLosLibros = libros;
+        mostrarLibros(libros);
       })
       .catch(error => {
         console.error("Error cargando libros:", error);
       });
+
+    function mostrarLibros(libros) {
+      catalogo.innerHTML = "";
+      carousel.innerHTML = "";
+
+      libros.forEach((libro, i) => {
+        const card = `
+          <div class="col-md-4 mb-4">
+            <div class="card book-card shadow">
+              <img src="${libro.imagen}" class="card-img-top" alt="Portada ${libro.titulo}">
+              <div class="card-body">
+                <h5 class="card-title">${libro.titulo}</h5>
+                <p class="card-text">Autor: ${libro.autor}</p>
+                <a href="${libro.enlace}" target="_blank" class="btn btn-primary">📖 Ver libro</a>
+              </div>
+            </div>
+          </div>
+        `;
+        catalogo.innerHTML += card;
+
+        const item = `
+          <div class="carousel-item ${i === 0 ? "active" : ""}">
+            <img src="${libro.imagen}" class="d-block w-100" alt="${libro.titulo}">
+            <div class="carousel-caption d-none d-md-block bg-dark bg-opacity-50 rounded p-2">
+              <h5>${libro.titulo}</h5>
+              <p>${libro.autor}</p>
+            </div>
+          </div>
+        `;
+        carousel.innerHTML += item;
+      });
+    }
+
+    // Búsqueda dinámica
+    input.addEventListener("input", () => {
+      const texto = input.value.toLowerCase();
+      const tipo = filtro.value;
+
+      const filtrados = todosLosLibros.filter(libro =>
+        libro[tipo].toLowerCase().includes(texto)
+      );
+
+      mostrarLibros(filtrados);
+    });
   </script>
 
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
