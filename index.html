@@ -17,6 +17,17 @@
   transition: transform 0.3s;
 } 
 
+.telefono {
+  margin: 0;
+  font-size: 1.1rem;
+  font-weight: bold;
+  animation: parpadeo 2s infinite;
+}
+
+@keyframes parpadeo {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.4; }
+}
 
    body {
       background: #f8f9fa;
@@ -36,9 +47,15 @@
 <body>
 <div class="text-center mb-3">
   <img src="img/logo.png" alt="Logo" id="logo" class="mb-2" style="width: 300px;">
+<div id="telefonos" class="d-inline-block ms-3">
+    <p class="telefono">📞 0998331787</p>
+    <p class="telefono">📱 0984079715</p>
+  </div>
+
 </div>
   <div class="container my-4">
-    <h1 class="text-center mb-4">📚 Catálogo de Libros</h1>
+    
+  <h1 class="text-center mb-4">📚 Catálogo de Libros</h1>
 
     <!-- Buscador -->
     <div class="row mb-4">
