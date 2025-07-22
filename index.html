@@ -56,6 +56,8 @@
   <div class="container my-4">
     
   <h1 class="text-center mb-4">📚 Catálogo de Libros</h1>
+<p class="text-center fw-bold text-secondary">👀 Visitas: <span id="contadorVisitas">Cargando...</span></p>
+    
 
     <!-- Buscador -->
     <div class="row mb-4">
@@ -87,8 +89,20 @@
 
   <script>
     const API_URL = "https://script.google.com/macros/s/AKfycbxqVHBPe1GalyVAu06NvqaF9anDugcFQL3iTnH8xcCJch_khnhEiL8u1nBRJtbKarc37w/exec";
+    const VISITAS_URL = "https://script.google.com/macros/s/AKfycbz8MdpmV4HLGwd780idYd6OVo9xgfeAwpJQ7g7hHpjzABmkaTOXh2iz6owq71tF8_YEgQ/exec";
+    fetch(VISITAS_URL)
+  .then(res => res.json())
+  .then(data => {
+    document.getElementById("contadorVisitas").innerText = data.visitas;
+  })
+  .catch(err => {
+    console.error("Error al cargar visitas:", err);
+    document.getElementById("contadorVisitas").innerText = "Error";
+});
 
-    let todosLosLibros = [];
+
+
+   let todosLosLibros = [];
 
     const catalogo = document.getElementById("catalogoLibros");
     const carousel = document.getElementById("carouselContent");
